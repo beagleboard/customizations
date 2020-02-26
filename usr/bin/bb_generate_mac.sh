@@ -22,6 +22,11 @@
 
 #Ported from: https://github.com/RobertCNelson/boot-scripts/blob/master/boot/am335x_evm.sh
 
+if ! id | grep -q root; then
+	echo "must be run as root"
+	exit
+fi
+
 log="bb_generate_mac.sh"
 pre="/etc/cpsw_"
 
