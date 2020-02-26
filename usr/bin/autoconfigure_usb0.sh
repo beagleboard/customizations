@@ -21,6 +21,15 @@
 # THE SOFTWARE.
 #
 
+if [ -f /etc/default/bb-boot ] ; then
+	. /etc/default/bb-boot
+fi
+
+#Backup...
+if [ "x${USB_CONFIGURATION}" = "x" ] ; then
+	USB0_ADDRESS=192.168.7.2
+	USB0_NETMASK=255.255.255.252
+fi
 
 #
 # Auto-configuring the usb1 network interface:
@@ -45,5 +54,5 @@ done
 # if there is any pre-existing config for usb1, use that;
 # otherwise use a static default
 grep -rqE '^\s*iface usb0 inet' /etc/network/interfaces* && /sbin/ifup usb0 \
-	|| /sbin/ifconfig usb0 192.168.7.2 netmask 255.255.255.252 \
+	|| /sbin/ifconfig usb0 ${USB0_ADDRESS} netmask ${USB0_NETMASK} \
 	|| true
