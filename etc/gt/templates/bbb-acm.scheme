@@ -20,7 +20,7 @@ strings = (
         lang = 0x409;
         manufacturer = "BeagleBoard.org";
         product = "BeagleBoneBlack";
-        serialnumber = "2516BBBK2626";
+        serialnumber = "BBBSERIALNUM";
     } );
 functions : 
 {

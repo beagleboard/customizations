@@ -21,7 +21,7 @@ strings = (
         lang = 0x409;
         manufacturer = "BeagleBoard.org";
         product = "BeagleBoneBlack";
-        serialnumber = "2516BBBK2626";
+        serialnumber = "BBBSERIALNUM";
     } );
 functions : 
 {
@@ -40,8 +40,8 @@ functions :
         type = "ncm";
         attrs : 
         {
-            dev_addr = "b0:d5:cc:fc:03:02";
-            host_addr = "b0:d5:cc:fc:03:01";
+            dev_addr = "NCM_DEV_ADDR";
+            host_addr = "NCM_HOST_ADDR";
             qmult = 5;
         };
         os_descs = ( );
@@ -52,8 +52,8 @@ functions :
         type = "rndis";
         attrs : 
         {
-            dev_addr = "b0:d5:cc:fc:03:fe";
-            host_addr = "b0:d5:cc:fc:03:ff";
+            dev_addr = "RNDIS_DEV_ADDR";
+            host_addr = "RNDIS_HOST_ADDR";
             qmult = 5;
         };
         os_descs = ( 
