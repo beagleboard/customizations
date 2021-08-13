@@ -1,0 +1,96 @@
+attrs : 
+{
+    bcdUSB = 0x200;
+    bDeviceClass = 0x2;
+    bDeviceSubClass = 0x0;
+    bDeviceProtocol = 0x0;
+    bMaxPacketSize0 = 0x40;
+    idVendor = 0x694;
+    idProduct = 0x5;
+    bcdDevice = 0x3001;
+};
+os_descs : 
+{
+    config_id = 2;
+    use = 1;
+    qw_sign = "MSFT100";
+    b_vendor_code = 0xCD;
+};
+strings = ( 
+    {
+        lang = 0x409;
+        manufacturer = "LEGO Group";
+        product = "EV3+ev3dev";
+        serialnumber = "12347812348712634";
+    } );
+functions : 
+{
+    ecm_usb0 : 
+    {
+        instance = "usb0";
+        type = "ecm";
+        attrs : 
+        {
+            dev_addr = "02:34:78:12:34:87";
+            host_addr = "12:34:78:12:34:87";
+            qmult = 5;
+        };
+        os_descs = ( );
+    };
+    rndis_usb0 : 
+    {
+        instance = "usb0";
+        type = "rndis";
+        attrs : 
+        {
+            dev_addr = "22:34:78:12:34:87";
+            host_addr = "32:34:78:12:34:87";
+            qmult = 5;
+        };
+        os_descs = ( 
+            {
+                interface = "rndis";
+                compatible_id = "RNDIS";
+                sub_compatible_id = "5162001";
+            } );
+    };
+};
+configs = ( 
+    {
+        id = 1;
+        name = "c";
+        attrs : 
+        {
+            bmAttributes = 0xC0;
+            bMaxPower = 0x1;
+        };
+        strings = ( 
+            {
+                lang = 0x409;
+                configuration = "CDC";
+            } );
+        functions = ( 
+            {
+                name = "ecm.usb0";
+                function = "ecm_usb0";
+            } );
+    }, 
+    {
+        id = 2;
+        name = "c";
+        attrs : 
+        {
+            bmAttributes = 0xC0;
+            bMaxPower = 0x1;
+        };
+        strings = ( 
+            {
+                lang = 0x409;
+                configuration = "RNDIS";
+            } );
+        functions = ( 
+            {
+                name = "rndis.usb0";
+                function = "rndis_usb0";
+            } );
+    } );
