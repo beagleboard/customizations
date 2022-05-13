@@ -18,4 +18,6 @@
 #
 
 SUBSYSTEM=="i2c", DEVPATH=="*0-0050", RUN+="/bin/chown root:gpio /sys$env{DEVPATH}/eeprom", RUN+="/bin/chmod 0640 /sys$env{DEVPATH}/eeprom"
+SUBSYSTEM=="i2c", DEVPATH=="*2-005*", RUN+="/bin/chown root:gpio /sys$env{DEVPATH}/eeprom", RUN+="/bin/chmod 0640 /sys$env{DEVPATH}/eeprom"
 SUBSYSTEM=="nvmem", DEVPATH=="*0-00500", RUN+="/bin/chown root:gpio /sys$env{DEVPATH}/nvmem", RUN+="/bin/chmod 0640 /sys$env{DEVPATH}/nvmem"
+SUBSYSTEM=="nvmem", DEVPATH=="*2-005*", RUN+="/bin/chown root:gpio /sys$env{DEVPATH}/nvmem", RUN+="/bin/chmod 0640 /sys$env{DEVPATH}/nvmem"
