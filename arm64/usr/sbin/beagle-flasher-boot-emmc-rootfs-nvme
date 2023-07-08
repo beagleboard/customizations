@@ -6,7 +6,7 @@ if ! id | grep -q root; then
 	exit
 fi
 
-version_message="1.20230424.0, rsync run twice on rootfs..."
+version_message="1.20230707.0, add swap support on am62..."
 
 #mke2fs -c
 #Check the device for bad blocks before creating the file system.
@@ -215,8 +215,8 @@ format_boot () {
 }
 
 format_root () {
-	message="/sbin/mkfs.ext4 ${ext4_options} ${destination}p2 -L ${rootfs_label}"              ; broadcast
-	LC_ALL=C /sbin/mkfs.ext4 ${ext4_options} ${destination}p2 -L ${rootfs_label}
+	message="/sbin/mkfs.ext4 ${ext4_options} ${destination}p${dest_rfs_part} -L ${rootfs_label}"              ; broadcast
+	LC_ALL=C /sbin/mkfs.ext4 ${ext4_options} ${destination}p${dest_rfs_part} -L ${rootfs_label}
 	message="--------------------------------------------------------------------------------" ; broadcast
 	flush_cache
 }
@@ -340,6 +340,15 @@ partition_drive () {
 
 		src_rfs_part="2"
 		dest_rfs_part="1"
+
+		if [ "x${rfs_swap_size_mb}" != "x" ] ; then
+			src_rfs_part="3"
+			dest_rfs_part="1"
+		else
+			src_rfs_part="2"
+			dest_rfs_part="1"
+		fi
+
 		copy_rootfs
 
 		if [ "x${extlinux}" != "x" ] ; then
@@ -358,6 +367,11 @@ partition_drive () {
 
 		partition_two_start_mb=$(($partition_one_start_mb + $partition_one_size_mb))
 
+		if [ "x${rfs_swap_size_mb}" != "x" ] ; then
+			partition_two_size_mb="${rfs_swap_size_mb}"
+			partition_three_start_mb=$(($partition_one_start_mb + $partition_one_size_mb + $partition_two_size_mb))
+		fi
+
 		boot_label=${boot_label:-"FIRMWARE"}
 		rootfs_label=${rootfs_label:-"rootfs"}
 
@@ -367,24 +381,47 @@ partition_drive () {
 		message="INFO: /sbin/sfdisk: [$(LC_ALL=C /sbin/sfdisk --version)]"                         ; broadcast
 		message="INFO: /sbin/sfdisk: [/sbin/sfdisk ${sfdisk_options} ${destination}]"              ; broadcast
 		message="INFO: /sbin/sfdisk: [${partition_one_start_mb}M,${partition_one_size_mb}M,${partition_one_fstype},*]" ; broadcast
-		message="INFO: /sbin/sfdisk: [${partition_two_start_mb}M,,,-]" ; broadcast
+		if [ "x${rfs_swap_size_mb}" != "x" ] ; then
+			message="INFO: /sbin/sfdisk: [${partition_two_start_mb}M,${partition_two_size_mb},0x82,-]" ; broadcast
+			message="INFO: /sbin/sfdisk: [${partition_three_start_mb}M,,,-]" ; broadcast
+		else
+			message="INFO: /sbin/sfdisk: [${partition_two_start_mb}M,,,-]" ; broadcast
+		fi
 		message="--------------------------------------------------------------------------------" ; broadcast
 
-		LC_ALL=C /sbin/sfdisk ${sfdisk_options} "${destination}" <<-__EOF__
-			${partition_one_start_mb}M,${partition_one_size_mb}M,${partition_one_fstype},*
-			${partition_two_start_mb}M,,,-
-		__EOF__
+		if [ "x${rfs_swap_size_mb}" != "x" ] ; then
+			LC_ALL=C /sbin/sfdisk ${sfdisk_options} "${destination}" <<-__EOF__
+				${partition_one_start_mb}M,${partition_one_size_mb}M,${partition_one_fstype},*
+				${partition_two_start_mb}M,${partition_two_size_mb},0x82,-
+				${partition_three_start_mb}M,,,-
+			__EOF__
+		else
+			LC_ALL=C /sbin/sfdisk ${sfdisk_options} "${destination}" <<-__EOF__
+				${partition_one_start_mb}M,${partition_one_size_mb}M,${partition_one_fstype},*
+				${partition_two_start_mb}M,,,-
+			__EOF__
+		fi
 
 		flush_cache
+
+		if [ "x${rfs_swap_size_mb}" != "x" ] ; then
+			src_rfs_part="3"
+			dest_rfs_part="3"
+		else
+			src_rfs_part="2"
+			dest_rfs_part="2"
+		fi
+
 		message="INFO: Formatting: ${destination}"                                                 ; broadcast
 		format_boot
 		format_root
+		if [ "x${rfs_swap_size_mb}" != "x" ] ; then
+			LC_ALL=C /sbin/mkswap ${destination}p2"
+		fi
 		message="INFO: Formatting: ${destination} complete"                                        ; broadcast
 		message="--------------------------------------------------------------------------------" ; broadcast
 
 		copy_boot
-		src_rfs_part="2"
-		dest_rfs_part="2"
 		copy_rootfs
 	else
 		example_failure
