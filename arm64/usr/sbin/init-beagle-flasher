@@ -390,7 +390,7 @@ partition_drive () {
 	fi
 
 	if [ "x${rfs_partition}" = "xsingle" ] ; then
-		rfs_rootfs_startmb=${rfs_rootfs_startmb:-"4"}
+		partition_one_start_mb=${rfs_rootfs_startmb:-"4"}
 
 		if [ "x${rfs_rootfs_type}" = "xext4" ] ; then
 			sfdisk_fstype="L"
@@ -402,11 +402,11 @@ partition_drive () {
 		message="INFO: Partitioning: ${destination}"                                               ; broadcast
 		message="INFO: /sbin/sfdisk: [$(LC_ALL=C /sbin/sfdisk --version)]"                         ; broadcast
 		message="INFO: /sbin/sfdisk: [/sbin/sfdisk ${sfdisk_options} ${destination}]"              ; broadcast
-		message="INFO: /sbin/sfdisk: [${rfs_rootfs_startmb}M,,${sfdisk_fstype},*]"                 ; broadcast
+		message="INFO: /sbin/sfdisk: [${partition_one_start_mb}M,,${sfdisk_fstype},*]"                 ; broadcast
 		message="--------------------------------------------------------------------------------" ; broadcast
 
 		LC_ALL=C /sbin/sfdisk ${sfdisk_options} "${destination}" <<-__EOF__
-			${rfs_rootfs_startmb}M,,${sfdisk_fstype},*
+			${partition_one_start_mb}M,,${sfdisk_fstype},*
 		__EOF__
 
 		flush_cache
@@ -419,11 +419,11 @@ partition_drive () {
 		dest_rfs_part="1"
 		copy_rootfs
 	elif [ "x${rfs_partition}" = "xdual" ] ; then
-		rfs_boot_startmb=${rfs_boot_startmb:-"1"}
+		partition_one_start_mb=${rfs_boot_startmb:-"1"}
 		rfs_boot_size_mb=${rfs_boot_size_mb:-"128"}
 		rfs_sfdisk_fstype=${rfs_sfdisk_fstype:-"0xc"}
 
-		sfdisk_rootfs_startmb=$(($rfs_boot_startmb + $rfs_boot_size_mb))
+		sfdisk_rootfs_startmb=$(($partition_one_start_mb + $rfs_boot_size_mb))
 
 		boot_label=${boot_label:-"FIRMWARE"}
 		rootfs_label=${rootfs_label:-"rootfs"}
@@ -433,12 +433,12 @@ partition_drive () {
 		message="INFO: Partitioning: ${destination}"                                               ; broadcast
 		message="INFO: /sbin/sfdisk: [$(LC_ALL=C /sbin/sfdisk --version)]"                         ; broadcast
 		message="INFO: /sbin/sfdisk: [/sbin/sfdisk ${sfdisk_options} ${destination}]"              ; broadcast
-		message="INFO: /sbin/sfdisk: [${rfs_boot_startmb}M,${rfs_boot_size_mb}M,${rfs_sfdisk_fstype},*]" ; broadcast
+		message="INFO: /sbin/sfdisk: [${partition_one_start_mb}M,${rfs_boot_size_mb}M,${rfs_sfdisk_fstype},*]" ; broadcast
 		message="INFO: /sbin/sfdisk: [${sfdisk_rootfs_startmb}M,,,-]" ; broadcast
 		message="--------------------------------------------------------------------------------" ; broadcast
 
 		LC_ALL=C /sbin/sfdisk ${sfdisk_options} "${destination}" <<-__EOF__
-			${rfs_boot_startmb}M,${rfs_boot_size_mb}M,${rfs_sfdisk_fstype},*
+			${partition_one_start_mb}M,${rfs_boot_size_mb}M,${rfs_sfdisk_fstype},*
 			${sfdisk_rootfs_startmb}M,,,-
 		__EOF__
 
