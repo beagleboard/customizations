@@ -289,10 +289,16 @@ copy_rootfs () {
 	flush_cache
 
 	if [ "x${flash_back}" != "x" ] ; then
-		if [ -f /etc/beagle-flasher/${flash_back} ] ; then
-			message="INFO: [cp -v /etc/beagle-flasher/${flash_back} /tmp/rootfs/etc/default/beagle-flasher]" ; broadcast
-			cp -v /etc/beagle-flasher/${flash_back} /tmp/rootfs/etc/default/beagle-flasher
+		if [ -f ${flash_back} ] ; then
+			message="INFO: [cp -v ${flash_back} /tmp/rootfs/etc/default/beagle-flasher]" ; broadcast
+			cp -v ${flash_back} /tmp/rootfs/etc/default/beagle-flasher
 			message="--------------------------------------------------------------------------------" ; broadcast
+		else
+			if [ -f /etc/beagle-flasher/${flash_back} ] ; then
+				message="INFO: [cp -v /etc/beagle-flasher/${flash_back} /tmp/rootfs/etc/default/beagle-flasher]" ; broadcast
+				cp -v /etc/beagle-flasher/${flash_back} /tmp/rootfs/etc/default/beagle-flasher
+				message="--------------------------------------------------------------------------------" ; broadcast
+			fi
 		fi
 	fi
 
