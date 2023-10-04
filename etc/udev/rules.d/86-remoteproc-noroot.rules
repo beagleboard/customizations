@@ -3,19 +3,26 @@
 # ReWritten by: Matthijs van Duin
 # https://github.com/beagleboard/Latest-Images/issues/23#issuecomment-618263910
 #
-# identify remoteproc cores on am335x
-SUBSYSTEM=="remoteproc", KERNELS=="4a334000.pru",  ENV{REMOTEPROC_NAME}="pruss-core0"
-SUBSYSTEM=="remoteproc", KERNELS=="4a338000.pru",  ENV{REMOTEPROC_NAME}="pruss-core1"
-
-# identify remoteproc cores on am572x
-SUBSYSTEM=="remoteproc", KERNELS=="4b234000.pru",  ENV{REMOTEPROC_NAME}="pruss1-core0"
-SUBSYSTEM=="remoteproc", KERNELS=="4b238000.pru",  ENV{REMOTEPROC_NAME}="pruss1-core1"
-SUBSYSTEM=="remoteproc", KERNELS=="4b2b4000.pru",  ENV{REMOTEPROC_NAME}="pruss2-core0"
-SUBSYSTEM=="remoteproc", KERNELS=="4b2b8000.pru",  ENV{REMOTEPROC_NAME}="pruss2-core1"
-SUBSYSTEM=="remoteproc", KERNELS=="58820000.ipu",  ENV{REMOTEPROC_NAME}="ipu1"
-SUBSYSTEM=="remoteproc", KERNELS=="55020000.ipu",  ENV{REMOTEPROC_NAME}="ipu2"
-SUBSYSTEM=="remoteproc", KERNELS=="40800000.dsp",  ENV{REMOTEPROC_NAME}="dsp1"
-SUBSYSTEM=="remoteproc", KERNELS=="41000000.dsp",  ENV{REMOTEPROC_NAME}="dsp2"
+# identify remoteproc cores on j7...
+SUBSYSTEM=="remoteproc", KERNELS=="4d80800000.dsp",  ENV{REMOTEPROC_NAME}="j7-c66_0"
+SUBSYSTEM=="remoteproc", KERNELS=="4d81800000.dsp",  ENV{REMOTEPROC_NAME}="j7-c66_1"
+SUBSYSTEM=="remoteproc", KERNELS=="5c00000.r5f",     ENV{REMOTEPROC_NAME}="j7-main-r5f0_0"
+SUBSYSTEM=="remoteproc", KERNELS=="5d00000.r5f",     ENV{REMOTEPROC_NAME}="j7-main-r5f0_1"
+SUBSYSTEM=="remoteproc", KERNELS=="64800000.dsp",    ENV{REMOTEPROC_NAME}="j7-c71_0"
+SUBSYSTEM=="remoteproc", KERNELS=="5e00000.r5f",     ENV{REMOTEPROC_NAME}="j7-main-r5f1_0"
+SUBSYSTEM=="remoteproc", KERNELS=="5f00000.r5f",     ENV{REMOTEPROC_NAME}="j7-main-r5f1_1"
+SUBSYSTEM=="remoteproc", KERNELS=="b004000.rtu",     ENV{REMOTEPROC_NAME}="j7-rtu0_0"
+SUBSYSTEM=="remoteproc", KERNELS=="b006000.rtu",     ENV{REMOTEPROC_NAME}="j7-rtu0_1"
+SUBSYSTEM=="remoteproc", KERNELS=="b00a000.txpru",   ENV{REMOTEPROC_NAME}="j7-txpru0_0"
+SUBSYSTEM=="remoteproc", KERNELS=="b00c000.txpru",   ENV{REMOTEPROC_NAME}="j7-txpru0_1"
+SUBSYSTEM=="remoteproc", KERNELS=="b034000.pru",     ENV{REMOTEPROC_NAME}="j7-pru0_0"
+SUBSYSTEM=="remoteproc", KERNELS=="b038000.pru",     ENV{REMOTEPROC_NAME}="j7-pru0_1"
+SUBSYSTEM=="remoteproc", KERNELS=="b104000.rtu",     ENV{REMOTEPROC_NAME}="j7-rtu1_0"
+SUBSYSTEM=="remoteproc", KERNELS=="b106000.rtu",     ENV{REMOTEPROC_NAME}="j7-rtu1_1"
+SUBSYSTEM=="remoteproc", KERNELS=="b10a000.txpru",   ENV{REMOTEPROC_NAME}="j7-txpru1_0"
+SUBSYSTEM=="remoteproc", KERNELS=="b10c000.txpru",   ENV{REMOTEPROC_NAME}="j7-txpru1_1"
+SUBSYSTEM=="remoteproc", KERNELS=="b134000.pru",     ENV{REMOTEPROC_NAME}="j7-pru1_0"
+SUBSYSTEM=="remoteproc", KERNELS=="b138000.pru",     ENV{REMOTEPROC_NAME}="j7-pru1_1"
 
 # set permissions and create symlinks
 SUBSYSTEM=="remoteproc", ENV{REMOTEPROC_NAME}!="", ACTION=="add", \
