@@ -16,8 +16,8 @@ if [ -f /boot/uEnv.txt ] ; then
 	#https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/scripts/Makefile.dtbinst?h=v6.5-rc1#n37
 	#copy these under /boot/dtbs/${version}/overlays/ for older versions of u-boot.
 	if [ -f /boot/vmlinuz-${version} ] ; then
-		cp /usr/lib/linux-image-${version}/*.dtb /boot/dtbs/${version}/ || true
 		mkdir -p /boot/dtbs/${version}/overlays/ || true
+		cp /usr/lib/linux-image-${version}/*.dtb /boot/dtbs/${version}/ || true
 		cp /usr/lib/linux-image-${version}/*.dtbo /boot/dtbs/${version}/overlays/ || true
 		cp /usr/lib/linux-image-${version}/*.dtbo /boot/dtbs/${version}/ || true
 	fi
