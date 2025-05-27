@@ -239,8 +239,8 @@ check_running_system () {
 }
 
 format_boot () {
-	message="mkfs.vfat -F 16 ${destination}p1 -n ${boot_label}"                          ; broadcast
-	LC_ALL=C mkfs.vfat -F 16 ${destination}p1 -n ${boot_label}
+	message="mkfs.vfat -F 32 ${destination}p1 -n ${boot_label}"                          ; broadcast
+	LC_ALL=C mkfs.vfat -F 32 ${destination}p1 -n ${boot_label}
 	message="--------------------------------------------------------------------------------" ; broadcast
 	flush_cache
 }
@@ -532,6 +532,9 @@ partition_drive () {
 		partition_two_start_mb=$(($boot_startmb + $boot_endmb))
 		partition_three_start_mb=$(($partition_two_start_mb + $swap_sizemb))
 
+		boot_label=${boot_label:-"FIRMWARE"}
+		rootfs_label=${rootfs_label:-"rootfs"}
+
 		sfdisk_options="--force --wipe-partitions always"
 
 		message="INFO: Partitioning: ${destination}"                                               ; broadcast
@@ -557,7 +560,6 @@ partition_drive () {
 
 		copy_boot_firmware
 		copy_rootfs
-
 	else
 		example_failure
 	fi
