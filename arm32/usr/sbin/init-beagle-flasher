@@ -282,19 +282,25 @@ copy_rootfs () {
 	mount ${destination}p${media_rootfs} /tmp/rootfs/ -o async,noatime
 
 	message="INFO: rsync: (-aHAXx) [/ -> /tmp/rootfs/]"                                ; broadcast
-	rsync -aHAXx --human-readable --info=progress2 /* /tmp/rootfs/ --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/media/*,/lost+found,/lib/modules/*,/uEnv.txt} || write_failure
+	rsync -aHAXx --human-readable --info=progress2 /* /tmp/rootfs/ --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/media/*,/lost+found,/lib/modules/*,/usr/lib/modules/*,/uEnv.txt} || write_failure
 	message="--------------------------------------------------------------------------------" ; broadcast
 	flush_cache
 
 	message="INFO: rsync: (-aHAXx) [/ -> /tmp/rootfs/]"                                ; broadcast
-	rsync -aHAXx --human-readable --info=progress2 /* /tmp/rootfs/ --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/media/*,/lost+found,/lib/modules/*,/uEnv.txt} || write_failure
+	rsync -aHAXx --human-readable --info=progress2 /* /tmp/rootfs/ --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/media/*,/lost+found,/lib/modules/*,/usr/lib/modules/*,/uEnv.txt} || write_failure
 	message="--------------------------------------------------------------------------------" ; broadcast
 	flush_cache
 
 	message="INFO: Copying: Kernel modules"                                                    ; broadcast
-	mkdir -p /tmp/rootfs/lib/modules/$(uname -r)/ || true
-	message="INFO: rsync: (-aHAXx) /lib/modules/$(uname -r)/ -> /tmp/rootfs/lib/modules/$(uname -r)/" ; broadcast
-	rsync -aHAXx --human-readable --info=name0,progress2 /lib/modules/$(uname -r)/* /tmp/rootfs/lib/modules/$(uname -r)/ || write_failure
+	if [ -d /usr/lib/modules/ ] ; then
+		mkdir -p /tmp/rootfs/usr/lib/modules/$(uname -r)/ || true
+		message="INFO: rsync: (-aHAXx) /usr/lib/modules/$(uname -r)/ -> /tmp/rootfs/usr/lib/modules/$(uname -r)/" ; broadcast
+		rsync -aHAXx --human-readable --info=name0,progress2 /usr/lib/modules/$(uname -r)/* /tmp/rootfs/usr/lib/modules/$(uname -r)/ || write_failure
+	else
+		mkdir -p /tmp/rootfs/lib/modules/$(uname -r)/ || true
+		message="INFO: rsync: (-aHAXx) /lib/modules/$(uname -r)/ -> /tmp/rootfs/lib/modules/$(uname -r)/" ; broadcast
+		rsync -aHAXx --human-readable --info=name0,progress2 /lib/modules/$(uname -r)/* /tmp/rootfs/lib/modules/$(uname -r)/ || write_failure
+	fi
 	message="--------------------------------------------------------------------------------" ; broadcast
 	flush_cache
 
