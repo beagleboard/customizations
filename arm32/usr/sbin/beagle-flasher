@@ -267,8 +267,8 @@ copy_boot () {
 
 	mount ${destination}p1 /tmp/boot/ -o sync
 
-	message="rsync: (-aHAXx) /boot/firmware/ -> /tmp/boot/" ; broadcast
-	rsync -aHAXx --human-readable --info=progress2 /boot/firmware/ /tmp/boot/ || write_failure
+	message="cp -rv: /boot/firmware/ -> /tmp/boot/" ; broadcast
+	cp -rv /boot/firmware/* /tmp/boot/ || write_failure
 	flush_cache
 
 	umount /tmp/boot/ || umount -l /tmp/boot/ || write_failure
