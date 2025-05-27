@@ -75,7 +75,7 @@ reset_leds() {
 
 		leds_pattern0=${leds_pattern0:-"heartbeat"}
 		leds_pattern1=${leds_pattern1:-"mmc0"}
-		leds_pattern2=${leds_pattern2:-"cpu0"}
+		leds_pattern2=${leds_pattern2:-"none"}
 		leds_pattern3=${leds_pattern3:-"mmc1"}
 		leds_base=/sys/class/leds/beaglebone\:green\:usr
 
