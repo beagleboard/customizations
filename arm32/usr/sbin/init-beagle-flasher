@@ -274,6 +274,22 @@ copy_boot () {
 	umount /boot/firmware || umount -l /boot/firmware || true
 }
 
+copy_boot_firmware () {
+	message="Copying: ${source}p1 -> ${destination}p1" ; broadcast
+	mount ${source}p1 /boot/firmware || true
+	mkdir -p /tmp/boot/ || true
+
+	mount ${destination}p1 /tmp/boot/ -o sync
+
+	message="cp -rv: /boot/firmware/ -> /tmp/boot/" ; broadcast
+	cp -rv /boot/firmware/* /tmp/boot/ || write_failure
+	flush_cache
+
+	umount /tmp/boot/ || umount -l /tmp/boot/ || write_failure
+	flush_cache
+	umount /boot/firmware || umount -l /boot/firmware || true
+}
+
 copy_rootfs () {
 	message="INFO: Copying: ${source}p${media_rootfs} -> ${destination}p${media_rootfs}"       ; broadcast
 	mkdir -p /tmp/rootfs/ || true
@@ -544,7 +560,7 @@ partition_drive () {
 		message="INFO: Formatting: ${destination} complete"                                        ; broadcast
 		message="--------------------------------------------------------------------------------" ; broadcast
 
-		copy_boot
+		copy_boot_firmware
 		copy_rootfs
 	else
 		example_failure
