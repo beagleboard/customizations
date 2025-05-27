@@ -12,7 +12,7 @@ if [ ! -f /etc/default/beagle-flasher ] ; then
 	case "${soc_family}" in
 	AM33xx)
 		if [ -f /boot/firmware/sysconf.txt ] ; then
-			if [ -f /etc/beagle-flasher/beaglebone-black-microsd-to-emmc-fat-swap ]
+			if [ -f /etc/beagle-flasher/beaglebone-black-microsd-to-emmc-fat-swap ] ; then
 				cp -v /etc/beagle-flasher/beaglebone-black-microsd-to-emmc-fat-swap /etc/default/beagle-flasher
 			else
 				cp -v /etc/beagle-flasher/beaglebone-black-microsd-to-emmc /etc/default/beagle-flasher
