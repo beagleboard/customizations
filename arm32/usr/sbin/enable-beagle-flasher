@@ -11,10 +11,18 @@ soc_family=$(cat /sys/devices/soc0/family || true)
 if [ ! -f /etc/default/beagle-flasher ] ; then
 	case "${soc_family}" in
 	AM33xx)
-		sudo cp -v /etc/beagle-flasher/beaglebone-black-microsd-to-emmc /etc/default/beagle-flasher
+		if [ -f /boot/firmware/sysconf.txt ] ; then
+			if [ -f /etc/beagle-flasher/beaglebone-black-microsd-to-emmc-fat-swap ]
+				cp -v /etc/beagle-flasher/beaglebone-black-microsd-to-emmc-fat-swap /etc/default/beagle-flasher
+			else
+				cp -v /etc/beagle-flasher/beaglebone-black-microsd-to-emmc /etc/default/beagle-flasher
+			fi
+		else
+			cp -v /etc/beagle-flasher/beaglebone-black-microsd-to-emmc /etc/default/beagle-flasher
+		fi
 		;;
 	DRA7)
-		sudo cp -v /etc/beagle-flasher/bbai-microsd-to-emmc /etc/default/beagle-flasher
+		cp -v /etc/beagle-flasher/bbai-microsd-to-emmc /etc/default/beagle-flasher
 		;;
 	esac
 fi
