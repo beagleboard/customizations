@@ -268,25 +268,10 @@ copy_boot () {
 	mount ${destination}p1 /tmp/boot/ -o sync
 
 	message="rsync: (-aHAXx) /boot/firmware/ -> /tmp/boot/" ; broadcast
-	rsync -aHAXx /boot/firmware/ /tmp/boot/ || write_failure
+	rsync -aHAXx --human-readable --info=progress2 /boot/firmware/ /tmp/boot/ || write_failure
 	flush_cache
 
 	umount /tmp/boot/ || umount -l /tmp/boot/ || write_failure
-	flush_cache
-	umount /boot/firmware || umount -l /boot/firmware || true
-}
-
-copy_boot_firmware () {
-	message="Copying: ${source}p1 -> ${destination}p1" ; broadcast
-	mkdir -p /tmp/boot/firmware/ || true
-
-	mount ${destination}p1 /tmp/boot/firmware/ -o sync
-
-	message="rsync: (-aHAXx) /boot/firmware/ -> /tmp/boot/firmware/" ; broadcast
-	rsync -aHAXx /boot/firmware/* /tmp/boot/firmware/ || write_failure
-	flush_cache
-
-	umount /tmp/boot/firmware/ || umount -l /tmp/boot/firmware/ || write_failure
 	flush_cache
 	umount /boot/firmware || umount -l /boot/firmware || true
 }
@@ -513,7 +498,7 @@ partition_drive () {
 		message="INFO: Formatting: ${destination} complete"                                        ; broadcast
 		message="--------------------------------------------------------------------------------" ; broadcast
 
-		copy_boot_firmware
+		copy_boot
 		copy_rootfs
 	else
 		example_failure
