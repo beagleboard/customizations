@@ -540,6 +540,7 @@ partition_drive () {
 		format_boot
 		media_rootfs=3
 		format_root
+		LC_ALL=C mkswap ${destination}p2
 		message="INFO: Formatting: ${destination} complete"                                        ; broadcast
 		message="--------------------------------------------------------------------------------" ; broadcast
 
