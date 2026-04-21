@@ -3,7 +3,7 @@
 #From: https://github.com/armbian/build/blob/main/packages/bsp/usb-gadget-network/remove-usbgadget-network.sh
 
 SYSDIR=/sys/kernel/config/usb_gadget/
-DEVDIR=$SYSDIR/g1
+DEVDIR=$SYSDIR/g_multi
 
 [ -d $DEVDIR ] || exit
 
@@ -36,4 +36,4 @@ done
 
 echo "Removing gadget"
 rmdir $DEVDIR
-pkill unudhcpd
+#pkill unudhcpd
