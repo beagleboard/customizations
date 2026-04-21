@@ -32,9 +32,6 @@ CONFIGFS="/sys/kernel/config/usb_gadget"
 usb_serialnr="000000"
 usb_product="USB Device"
 
-usb_imanufacturer="BeagleBoard.org"
-usb_iproduct="$(cat /proc/device-tree/model | sed "s/ /_/g" | tr -d '\000')"
-
 #usb0 mass_storage
 usb_ms_stall=0
 usb_ms_cdrom=0
@@ -51,6 +48,9 @@ usb_ms_imagefile=/etc/bbb.io/templates/beagle-getting-started.img
 #cpsw_4_mac = usb1 (BeagleBone Side)
 #cpsw_5_mac = usb1 (USB host, pc side)
 
+deviceinfo_usb_imanufacturer="BeagleBoard.org"
+deviceinfo_usb_iproduct="$(cat /proc/device-tree/model | sed "s/ /_/g" | tr -d '\000')"
+
 if [ -f /etc/default/usb-oem ] ; then
 	. /etc/default/usb-oem
 fi
@@ -66,7 +66,10 @@ usb_idProduct="${deviceinfo_usb_idProduct:-0x0104}" # Multifunction Composite Ga
 usb_bcdDevice="${deviceinfo_usb_bcdDevice:-0x0404}"
 usb_bcdUSB="${deviceinfo_usb_bcdUSB:-0x0200}"
 
+usb_imanufacturer="${deviceinfo_usb_imanufacturer:-BeagleBoard.org}"
 usb_serialnumber="${deviceinfo_usb_serialnumber:-1234BBBK5678}"
+usb_iproduct="${deviceinfo_usb_iproduct:-BeagleBone}"
+
 
 run_libcomposite () {
 	if [ ! -d ${CONFIGFS}/g_multi/ ] ; then
@@ -74,10 +77,17 @@ run_libcomposite () {
 		# Create an usb gadet configuration
 		mkdir -p ${CONFIGFS}/g_multi || echo "  Couldn't create $CONFIGFS/g_multi"
 
-		echo ${usb_idVendor} > "$CONFIGFS/g_multi/idVendor"
-		echo ${usb_idProduct} > "$CONFIGFS/g_multi/idProduct"
-		echo ${usb_bcdDevice} > "$CONFIGFS/g_multi/bcdDevice"
-		echo ${usb_bcdUSB} > "$CONFIGFS/g_multi/bcdUSB"
+		echo "$usb_idVendor" > "$CONFIGFS/g_multi/idVendor"
+		echo "$usb_idProduct" > "$CONFIGFS/g_multi/idProduct"
+		echo "$usb_bcdDevice" > "$CONFIGFS/g_multi/bcdDevice"
+		echo "$usb_bcdUSB" > "$CONFIGFS/g_multi/bcdUSB"
+
+		# Create english (0x409) strings
+		mkdir $CONFIGFS/g_multi/strings/0x409 || echo "  Couldn't create $CONFIGFS/g_multi/strings/0x409"
+
+		echo "$usb_imanufacturer" > "$CONFIGFS/g_multi/strings/0x409/manufacturer"
+		echo "$usb_iserialnumber" > "$CONFIGFS/g_multi/strings/0x409/serialnumber"
+		echo "$usb_iproduct" > "$CONFIGFS/g_multi/strings/0x409/product"
 
 		cd ${CONFIGFS}/g_multi
 
@@ -87,13 +97,6 @@ run_libcomposite () {
 		echo "0x02" > bDeviceSubClass
 		echo "0x01" > bDeviceProtocol
 		echo "0x0100" > bcdDevice
-
-		#0x409 = english strings...
-		mkdir -p strings/0x409
-
-		echo ${usb_iserialnumber} > strings/0x409/serialnumber
-		echo ${usb_imanufacturer} > strings/0x409/manufacturer
-		echo ${usb_iproduct} > strings/0x409/product
 
 		mkdir -p configs/c.1/strings/0x409
 		echo "BeagleBone Composite" > configs/c.1/strings/0x409/configuration
