@@ -75,7 +75,7 @@ run_libcomposite () {
 	if [ ! -d ${CONFIGFS}/g_multi/ ] ; then
 		echo "${log} Setting up g_multit through configfs"
 		# Create an usb gadet configuration
-		mkdir -p ${CONFIGFS}/g_multi || echo "  Couldn't create $CONFIGFS/g_multi"
+		mkdir -p ${CONFIGFS}/g_multi || echo "${log} Couldn't create $CONFIGFS/g_multi"
 
 		echo "$usb_idVendor" > "$CONFIGFS/g_multi/idVendor"
 		echo "$usb_idProduct" > "$CONFIGFS/g_multi/idProduct"
@@ -83,23 +83,23 @@ run_libcomposite () {
 		echo "$usb_bcdUSB" > "$CONFIGFS/g_multi/bcdUSB"
 
 		# Create english (0x409) strings
-		mkdir $CONFIGFS/g_multi/strings/0x409 || echo "  Couldn't create $CONFIGFS/g_multi/strings/0x409"
+		mkdir $CONFIGFS/g_multi/strings/0x409 || echo "${log} Couldn't create $CONFIGFS/g_multi/strings/0x409"
 
 		echo "$usb_imanufacturer" > "$CONFIGFS/g_multi/strings/0x409/manufacturer"
 		echo "$usb_iserialnumber" > "$CONFIGFS/g_multi/strings/0x409/serialnumber"
 		echo "$usb_iproduct" > "$CONFIGFS/g_multi/strings/0x409/product"
 
-		cd ${CONFIGFS}/g_multi
-
 		# Windows extension to use IAD (Interface Association Descriptor)
 		# https://learn.microsoft.com/en-us/windows-hardware/drivers/usbcon/usb-interface-association-descriptor
-		echo "0xEF" > bDeviceClass
-		echo "0x02" > bDeviceSubClass
-		echo "0x01" > bDeviceProtocol
-		echo "0x0100" > bcdDevice
+		echo "0xEF" > "$CONFIGFS/g_multi/bDeviceClass"
+		echo "0x02" > "$CONFIGFS/g_multi/bDeviceSubClass"
+		echo "0x01" > "$CONFIGFS/g_multi/bDeviceProtocol"
+		echo "0x0100" > "$CONFIGFS/g_multi/bcdDevice"
 
-		mkdir -p configs/c.1/strings/0x409
-		echo "BeagleBone Composite" > configs/c.1/strings/0x409/configuration
+		mkdir -p $CONFIGFS/g_multi/configs/c.1/strings/0x409 || echo "${log} Couldn't create $CONFIGFS/g_multi/configs/c.1/strings/0x409"
+		echo "BeagleBone Composite" > "$CONFIGFS/g_multi/configs/c.1/strings/0x409/configuration"
+
+		cd ${CONFIGFS}/g_multi
 
 		echo 500 > configs/c.1/MaxPower
 
