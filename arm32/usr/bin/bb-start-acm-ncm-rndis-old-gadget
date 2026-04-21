@@ -102,7 +102,9 @@ run_libcomposite () {
 
 		# Enable use of OS descriptor (for windows to bind drivers like NCM, RNDIS...
 		# without additional .inf file)
-		mkdir $CONFIGFS/g_multi/os_desc || echo "${log} Couldn't create $CONFIGFS/g_multi/os_desc"
+		if [ ! -d $CONFIGFS/g_multi/os_desc ] ; then
+			mkdir $CONFIGFS/g_multi/os_desc || echo "${log} Couldn't create $CONFIGFS/g_multi/os_desc"
+		fi
 		echo "1" > "$CONFIGFS/g_multi/os_desc/use"
 		echo "0xbc" > "$CONFIGFS/g_multi/os_desc/b_vendor_code"
 		echo "MSFT100" > "$CONFIGFS/g_multi/os_desc/qw_sign"
