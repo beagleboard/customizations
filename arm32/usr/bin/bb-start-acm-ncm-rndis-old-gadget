@@ -39,8 +39,6 @@ usb_bcdUSB="0x0200"
 usb_serialnr="000000"
 usb_product="USB Device"
 
-usb_iserialnumber="1234BBBK5678"
-#usb_iserialnumber="$(cat /proc/device-tree/serial-number)"
 usb_imanufacturer="BeagleBoard.org"
 usb_iproduct="$(cat /proc/device-tree/model | sed "s/ /_/g" | tr -d '\000')"
 
@@ -67,6 +65,7 @@ fi
 # Default values for USB-related deviceinfo variables
 usb_idVendor="${deviceinfo_usb_idVendor:-0x1D6B}"   # Linux Foundation
 usb_idProduct="${deviceinfo_usb_idProduct:-0x0104}" # Multifunction Composite Gadget
+usb_serialnumber="${deviceinfo_usb_serialnumber:-1234BBBK5678}"
 
 run_libcomposite () {
 	if [ ! -d ${CONFIGFS}/g_multi/ ] ; then
