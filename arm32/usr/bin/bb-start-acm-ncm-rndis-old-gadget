@@ -29,13 +29,6 @@ log="usb_gadget:"
 
 CONFIGFS="/sys/kernel/config/usb_gadget"
 
-#  idVendor           0x1d6b Linux Foundation
-#  idProduct          0x0104 Multifunction Composite Gadget
-#  bcdDevice            4.04
-#  bcdUSB               2.00
-
-usb_bcdDevice="0x0404"
-usb_bcdUSB="0x0200"
 usb_serialnr="000000"
 usb_product="USB Device"
 
@@ -62,21 +55,31 @@ if [ -f /etc/default/usb-oem ] ; then
 	. /etc/default/usb-oem
 fi
 
+#  idVendor           0x1d6b Linux Foundation
+#  idProduct          0x0104 Multifunction Composite Gadget
+#  bcdDevice            4.04
+#  bcdUSB               2.00
+
 # Default values for USB-related deviceinfo variables
 usb_idVendor="${deviceinfo_usb_idVendor:-0x1D6B}"   # Linux Foundation
 usb_idProduct="${deviceinfo_usb_idProduct:-0x0104}" # Multifunction Composite Gadget
+usb_bcdDevice="${deviceinfo_usb_bcdDevice:-0x0404}"
+usb_bcdUSB="${deviceinfo_usb_bcdUSB:-0x0200}"
+
 usb_serialnumber="${deviceinfo_usb_serialnumber:-1234BBBK5678}"
 
 run_libcomposite () {
 	if [ ! -d ${CONFIGFS}/g_multi/ ] ; then
-		echo "${log} Creating g_multi"
-		mkdir -p ${CONFIGFS}/g_multi || true
-		cd ${CONFIGFS}/g_multi
+		echo "${log} Setting up g_multit through configfs"
+		# Create an usb gadet configuration
+		mkdir -p ${CONFIGFS}/g_multi || echo "  Couldn't create $CONFIGFS/g_multi"
 
-		echo ${usb_bcdUSB} > bcdUSB
-		echo ${usb_idVendor} > idVendor # Linux Foundation
-		echo ${usb_idProduct} > idProduct # Multifunction Composite Gadget
-		echo ${usb_bcdDevice} > bcdDevice
+		echo ${usb_idVendor} > "$CONFIGFS/g_multi/idVendor"
+		echo ${usb_idProduct} > "$CONFIGFS/g_multi/idProduct"
+		echo ${usb_bcdDevice} > "$CONFIGFS/g_multi/bcdDevice"
+		echo ${usb_bcdUSB} > "$CONFIGFS/g_multi/bcdUSB"
+
+		cd ${CONFIGFS}/g_multi
 
 		# Windows extension to use IAD (Interface Association Descriptor)
 		# https://learn.microsoft.com/en-us/windows-hardware/drivers/usbcon/usb-interface-association-descriptor
