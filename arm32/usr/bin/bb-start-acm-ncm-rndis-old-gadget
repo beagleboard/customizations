@@ -34,7 +34,6 @@ CONFIGFS="/sys/kernel/config/usb_gadget"
 #  bcdDevice            4.04
 #  bcdUSB               2.00
 
-usb_idProduct="0x0104"
 usb_bcdDevice="0x0404"
 usb_bcdUSB="0x0200"
 usb_serialnr="000000"
@@ -67,6 +66,7 @@ fi
 
 # Default values for USB-related deviceinfo variables
 usb_idVendor="${deviceinfo_usb_idVendor:-0x1D6B}"   # Linux Foundation
+usb_idProduct="${deviceinfo_usb_idProduct:-0x0104}" # Multifunction Composite Gadget
 
 run_libcomposite () {
 	if [ ! -d ${CONFIGFS}/g_multi/ ] ; then
