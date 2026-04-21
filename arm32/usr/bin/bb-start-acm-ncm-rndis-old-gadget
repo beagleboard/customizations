@@ -25,7 +25,7 @@ fi
 
 log="usb_gadget:"
 
-usb_gadget="/sys/kernel/config/usb_gadget"
+CONFIGFS="/sys/kernel/config/usb_gadget"
 
 #  idVendor           0x1d6b Linux Foundation
 #  idProduct          0x0104 Multifunction Composite Gadget
@@ -65,10 +65,10 @@ if [ -f /etc/default/usb-oem ] ; then
 fi
 
 run_libcomposite () {
-	if [ ! -d /sys/kernel/config/usb_gadget/g_multi/ ] ; then
+	if [ ! -d ${CONFIGFS}/g_multi/ ] ; then
 		echo "${log} Creating g_multi"
-		mkdir -p /sys/kernel/config/usb_gadget/g_multi || true
-		cd /sys/kernel/config/usb_gadget/g_multi
+		mkdir -p ${CONFIGFS}/g_multi || true
+		cd ${CONFIGFS}/g_multi
 
 		echo ${usb_bcdUSB} > bcdUSB
 		echo ${usb_idVendor} > idVendor # Linux Foundation
@@ -149,7 +149,7 @@ run_libcomposite () {
 		#fi
 	fi
 
-	cd /sys/kernel/config/usb_gadget/g_multi
+	cd ${CONFIGFS}/g_multi
 
 	ls /sys/class/udc/ > UDC
 
@@ -160,7 +160,7 @@ run_libcomposite () {
 
 use_libcomposite () {
 	echo "${log} Looking for libcomposite"
-	if [ -d /sys/kernel/config/usb_gadget/ ] ; then
+	if [ -d ${CONFIGFS}/ ] ; then
 		run_libcomposite
 	fi
 }
