@@ -131,46 +131,36 @@ run_libcomposite () {
 		# Link the Serial instance to the configuration
 		ln -s $CONFIGFS/g_multi/functions/acm.usb0 $CONFIGFS/g_multi/configs/c.1 || echo "${log} Couldn't symlink acm.usb0"
 
-		cd ${CONFIGFS}/g_multi
-
 		if [ ! "x${USB_IMAGE_FILE_DISABLED}" = "xyes" ]; then
 			if [ -f ${usb_ms_imagefile} ] ; then
 				echo "${log} enable USB mass_storage img file"
-				mkdir -p functions/mass_storage.usb0
-				echo ${usb_ms_stall} > functions/mass_storage.usb0/stall
-				echo ${usb_ms_cdrom} > functions/mass_storage.usb0/lun.0/cdrom
-				echo ${usb_ms_nofua} > functions/mass_storage.usb0/lun.0/nofua
-				echo ${usb_ms_removable} > functions/mass_storage.usb0/lun.0/removable
-				echo ${usb_ms_ro} > functions/mass_storage.usb0/lun.0/ro
-				echo ${usb_ms_imagefile} > functions/mass_storage.usb0/lun.0/file
 
-				ln -s functions/mass_storage.usb0 configs/c.1/
+				# Create mass_storage function.
+				mkdir $CONFIGFS/g_multi/functions/mass_storage.usb0 || echo "${log} Couldn't create $CONFIGFS/g_multi/functions/mass_storage.usb0"
+
+				echo ${usb_ms_stall} > "$CONFIGFS/g_multi/functions/mass_storage.usb0/stall"
+				echo ${usb_ms_cdrom} > "$CONFIGFS/g_multi/functions/mass_storage.usb0/lun.0/cdrom"
+				echo ${usb_ms_nofua} > "$CONFIGFS/g_multi/functions/mass_storage.usb0/lun.0/nofua"
+				echo ${usb_ms_removable} > "$CONFIGFS/g_multi/functions/mass_storage.usb0/lun.0/removable"
+				echo ${usb_ms_ro} > "$CONFIGFS/g_multi/functions/mass_storage.usb0/lun.0/ro"
+				echo ${usb_ms_imagefile} > "$CONFIGFS/g_multi/functions/mass_storage.usb0/lun.0/file"
+
+				# Link the mass_storage instance to the configuration
+				ln -s $CONFIGFS/g_multi/functions/mass_storage.usb0 $CONFIGFS/g_multi/configs/c.1 || echo "${log} Couldn't symlink mass_storage.usb0"
 			fi
 		fi
 
-		#mkdir -p functions/mass_storage.usb0
-		#echo 0 > functions/mass_storage.usb0/stall
-		#echo /dev/nbd0 > functions/mass_storage.usb0/lun.0/file
-		#ln -s functions/mass_storage.usb0 configs/c.1/
+		# Check if there's an USB Device Controller
+		if [ -z "$(ls /sys/class/udc)" ]; then
+			echo "${log} No USB Device Controller available"
+			return
+		fi
 
-		#if [ -f /usr/bin/umtprd ] ; then
-		#	mkdir -p functions/ffs.mtp
-		#	ln -s functions/ffs.mtp configs/c.1
+		echo "$(ls /sys/class/udc)" > $CONFIGFS/g_multi/UDC || echo "${log} Couldn't write UDC"
 
-		#	mkdir /dev/ffs-mtp
-		#	mount -t functionfs mtp /dev/ffs-mtp
-		#	/usr/bin/umtprd &
-		#	sleep 1
-		#fi
+		echo "${log} start serial-getty@ttyGS0.service"
+		systemctl start serial-getty@ttyGS0.service || true
 	fi
-
-	cd ${CONFIGFS}/g_multi
-
-	ls /sys/class/udc/ > UDC
-
-	echo "${log} g_multi Created"
-	systemctl start serial-getty@ttyGS0.service || true
-	echo "${log} start serial-getty@ttyGS0.service"
 }
 
 use_libcomposite () {
