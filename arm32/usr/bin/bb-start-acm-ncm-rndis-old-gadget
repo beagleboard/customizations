@@ -7,6 +7,8 @@
 #Based off:
 #https://github.com/beagleboard/meta-beagleboard/blob/master/meta-beagleboard-extras/recipes-support/usb-gadget/gadget-init/g-ether-load.sh
 
+#Sync with: https://github.com/armbian/build/blob/main/packages/bsp/usb-gadget-network/setup-usbgadget-network.sh
+
 if [ -f /etc/default/bb-mac-addr ] ; then
 	. /etc/default/bb-mac-addr
 elif [ -f /usr/bin/bb-setup-mac-address ] ; then
@@ -32,7 +34,6 @@ CONFIGFS="/sys/kernel/config/usb_gadget"
 #  bcdDevice            4.04
 #  bcdUSB               2.00
 
-usb_idVendor="0x1d6b"
 usb_idProduct="0x0104"
 usb_bcdDevice="0x0404"
 usb_bcdUSB="0x0200"
@@ -63,6 +64,9 @@ usb_ms_imagefile=/etc/bbb.io/templates/beagle-getting-started.img
 if [ -f /etc/default/usb-oem ] ; then
 	. /etc/default/usb-oem
 fi
+
+# Default values for USB-related deviceinfo variables
+usb_idVendor="${deviceinfo_usb_idVendor:-0x1D6B}"   # Linux Foundation
 
 run_libcomposite () {
 	if [ ! -d ${CONFIGFS}/g_multi/ ] ; then
