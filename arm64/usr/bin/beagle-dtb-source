@@ -7,7 +7,7 @@ git_clone () {
 		git clone ${git_repo} /opt/source/${git_target} --depth 1
 		sync
 		chown -R 1000:1000 /opt/source/${git_target}
-		echo "${git_target} : ${git_repo}" >> /opt/source/list.txt
+		echo "/opt/source/${git_target} : ${git_repo}" >> /opt/source/list.txt
 	else
 		echo "beagle-dtb-source: ${git_target} repo already exists"
 	fi
@@ -18,7 +18,7 @@ git_clone_branch () {
 		git clone -b ${git_branch} ${git_repo} /opt/source/${git_target} --depth 1
 		sync
 		chown -R 1000:1000 /opt/source/${git_target}
-		echo "${git_target} : ${git_repo}" >> /opt/source/list.txt
+		echo "/opt/source/${git_target} : ${git_repo}" >> /opt/source/list.txt
 	else
 		echo "beagle-dtb-source: ${git_target} repo already exists"
 	fi
