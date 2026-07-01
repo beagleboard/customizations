@@ -318,6 +318,16 @@ copy_rootfs () {
 	fi
 	flush_cache
 
+	if [ "x${generate_machine_id}" = "xenable" ] ; then
+		echo "truncate -s 0 /etc/machine-id"
+		truncate -s 0 /tmp/rootfs/etc/machine-id || true
+	fi
+
+	if [ "x${generate_ssh_keys}" = "xenable" ] ; then
+		echo "touch /etc/bbb.io/ssh_regenerate"
+		touch /tmp/rootfs/etc/bbb.io/ssh_regenerate || true
+	fi
+
 	message="Copying: ${source}p${src_rfs_part} -> ${destination}p${dest_rfs_part} complete"    ; broadcast
 	message="--------------------------------------------------------------------------------" ; broadcast
 	flush_cache
