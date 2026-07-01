@@ -6,7 +6,7 @@ if ! id | grep -q root; then
 	exit
 fi
 
-version_message="1.20250527.0, add new fat-swap-rootfs layout..."
+version_message="1.20260701.0, Allow user to reset etc/machine-id and ssh keys..."
 
 #Debian 12, Ubuntu Lunar, Mantic, Noble
 #https://packages.debian.org/source/bookworm/e2fsprogs
