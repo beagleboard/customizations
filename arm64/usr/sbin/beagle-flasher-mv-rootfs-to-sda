@@ -266,20 +266,20 @@ copy_rootfs () {
 	message="INFO: [mount ${destination}${dest_rfs_part} /tmp/rootfs/ -o async,noatime]"       ; broadcast
 	mount ${destination}${dest_rfs_part} /tmp/rootfs/ -o async,noatime
 
-	message="INFO: rsync: (-aHAXx) [/ -> /tmp/rootfs/]"                                ; broadcast
-	rsync -aHAXx --human-readable --info=progress2 /* /tmp/rootfs/ --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/media/*,/lost+found,/lib/modules/*,/boot/firmware/*} || write_failure
+	message="INFO: rsync: (-aAXHx) [/ -> /tmp/rootfs/]"                                ; broadcast
+	rsync -aAXHx --human-readable --info=progress2 /* /tmp/rootfs/ --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/media/*,/lost+found,/lib/modules/*,/boot/firmware/*} || write_failure
 	message="--------------------------------------------------------------------------------" ; broadcast
 	flush_cache
 
-	message="INFO: rsync: (-aHAXx) [/ -> /tmp/rootfs/]"                                ; broadcast
-	rsync -aHAXx --human-readable --info=progress2 /* /tmp/rootfs/ --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/media/*,/lost+found,/lib/modules/*,/boot/firmware/*} || write_failure
+	message="INFO: rsync: (-aAXHx) [/ -> /tmp/rootfs/]"                                ; broadcast
+	rsync -aAXHx --human-readable --info=progress2 /* /tmp/rootfs/ --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/media/*,/lost+found,/lib/modules/*,/boot/firmware/*} || write_failure
 	message="--------------------------------------------------------------------------------" ; broadcast
 	flush_cache
 
 	message="INFO: Copying: Kernel modules"                                                    ; broadcast
 	mkdir -p /tmp/rootfs/lib/modules/$(uname -r)/ || true
-	message="INFO: rsync: (-aHAXx) /lib/modules/$(uname -r)/ -> /tmp/rootfs/lib/modules/$(uname -r)/" ; broadcast
-	rsync -aHAXx --human-readable --info=progress2 /lib/modules/$(uname -r)/* /tmp/rootfs/lib/modules/$(uname -r)/ || write_failure
+	message="INFO: rsync: (-aAXHx) /lib/modules/$(uname -r)/ -> /tmp/rootfs/lib/modules/$(uname -r)/" ; broadcast
+	rsync -aAXHx --human-readable --info=progress2 /lib/modules/$(uname -r)/* /tmp/rootfs/lib/modules/$(uname -r)/ || write_failure
 	message="--------------------------------------------------------------------------------" ; broadcast
 	flush_cache
 
